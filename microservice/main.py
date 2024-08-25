@@ -60,4 +60,4 @@ async def receive_message(text: TextMessage):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level=logging.INFO)
+    uvicorn.run(app, host="0.0.0.0", port=8001, log_level=logging.ERROR)

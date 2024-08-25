@@ -9,3 +9,6 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    env_file:
+      - .env
