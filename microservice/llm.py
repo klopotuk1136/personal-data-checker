@@ -1,25 +1,40 @@
+from enum import Enum
+from typing import Optional
+from pydantic import BaseModel
 from openai import OpenAI
-import json
-assistant_id="asst_4T6HTRm5HVaccvxqR0eWenZo"
 
 client = OpenAI()
+
+class Category(str, Enum):
+    surname = "surname"
+    email = "email"
+    phone = "phone"
+    link = "link"
+    other = "other"
+
+class PersonalDataSharedCompliance(BaseModel):
+    is_personal_data_found: bool
+    category: Optional[Category]
+    explanation_if_found: Optional[str]
+
+prompt = """
+Your purpose is to detect personal data sharing in texts.
+You will be given a text that can contain some personal data like surname, email, phone number, links to some social networks or messaging apps. You need to check if this data is shared in the text.
+Your responce needs to be a valid json object.
+Pay attention that the text can contain some names or surnames that are not personal information.You need to decide it from the context of the message
+"""
+
 thread = client.beta.threads.create()
 
 def check_text(text):
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=text
+
+    completion = client.beta.chat.completions.parse(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": text}
+        ],
+        response_format=PersonalDataSharedCompliance,
     )
-    run = client.beta.threads.runs.create_and_poll(
-        thread_id=thread.id,
-        assistant_id=assistant_id
-    )
-    if run.status == 'completed': 
-        messages = client.beta.threads.messages.list(
-            thread_id=thread.id,
-            limit=1
-        )
-        return json.loads(messages.data[0].content[0].text.value)
-    else:
-        raise Exception(f"Assistant had {run.status} status.")
+    response = completion.choices[0].message.parsed
+    return response
