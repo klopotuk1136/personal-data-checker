@@ -6,7 +6,7 @@ from openai import OpenAI
 client = OpenAI()
 
 class Category(str, Enum):
-    surname = "surname"
+    name_surname = "name and surname"
     email = "email"
     phone = "phone"
     link = "link"
@@ -19,7 +19,7 @@ class PersonalDataSharedCompliance(BaseModel):
 
 prompt = """
 Your purpose is to detect personal data sharing in texts.
-You will be given a text that can contain some personal data like surname, email, phone number, links to some social networks or messaging apps. You need to check if this data is shared in the text.
+You will be given a text that can contain some personal data like name and surname, email, phone number, links to some social networks or messaging apps. You need to check if this data is shared in the text.
 Your responce needs to be a valid json object.
 Pay attention that the text can contain some names or surnames that are not personal information.You need to decide it from the context of the message
 """
