@@ -62,8 +62,8 @@ This microservice is designed to check if any personal data has been shared in a
   ```
 
 ## Running the Application
-
-To start the application, use the following command:
+Before the start add a .env file with an environment variable `OPENAI_API_KEY`.
+After that start the application, using the following command:
 `docker-compose up --build`
 
 The application is hosted on `8001` port.
