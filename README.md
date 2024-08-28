@@ -14,25 +14,25 @@ This microservice is designed to check if any personal data has been shared in a
 - **Method:** `POST`
 - **Description:** This endpoint checks the contents of an uploaded file for personal data.
 - **Request Body:**
-  - `file_name` (string): The name of the file. Supported file types: pdf, docx, xlsx, txt.
-  - `file_content` (string): The content of the file, encoded in base64.
+  - `username` (string): The username of the user.
+  - `doc_type` (string): The type of the file. Supported file types: pdf, docx, xlsx, txt.
+  - `data` (string): The content of the file, encoded in base64.
 - **Response:**
-  - `is_personal_data_found` (boolean): Indicates if personal data was found.
-  - `category` (string): The category of the personal data found (e.g., "surname").
-  - `explanation_if_found` (string): Explanation of what was found, if applicable.
+  - `status` (string): The status of the request. "ok" if nothing was found. Other statuses: "sensitive_information", "swear_words", "offensive_communication".
+  - `explanation` (string): Explanation of what was found, if applicable.
 - **Example Request:**
   ```json
   {
-    "file_name": "example.pdf",
-    "file_content": "JVBERi0xLjcKCjEgMCBv..."
+    "username": "klopotuk",
+    "doc_type": "docx",
+    "data": "base64"
   }
   ```
 - **Example Response:**
   ```json
   {
-    "is_personal_data_found": true,
-    "category": "surname",
-    "explanation_if_found": "The text includes the name 'John Doe', which contains a first name and a surname."
+    "status": "sensitive_information",
+    "explanation": "The text contains the full name 'Pavel Klapatsiuk', which is considered personal data."
   }
   ```
 
@@ -41,23 +41,23 @@ This microservice is designed to check if any personal data has been shared in a
 - **Method:** `POST`
 - **Description:** This endpoint checks a text message for personal data.
 - **Request Body:**
+  - `username` (string): The username of the user.
   - `message` (string): The text message to be checked.
 - **Response:**
-  - `is_personal_data_found` (boolean): Indicates if personal data was found.
-  - `category` (string): The category of the personal data found (e.g., "surname").
-  - `explanation_if_found` (string): Explanation of what was found, if applicable.
+  - `status` (string): The status of the request. "ok" if nothing was found. Other statuses: "sensitive_information", "swear_words", "offensive_communication".
+  - `explanation` (string): Explanation of what was found, if applicable.
 - **Example Request:**
   ```json
-  {
-    "message": "My name is John Doe."
+  {   
+    "username": "klopotuk",
+    "message":"Подскажите, пожалуйста, какой именно блять отчёт вы хотите сделать по истории средневековой бетбумии."
   }
   ```
 - **Example Response:**
   ```json
   {
-    "is_personal_data_found": true,
-    "category": "surname",
-    "explanation_if_found": "The text includes the name 'John Doe', which contains a first name and a surname."
+    "status": "swear_words",
+    "explanation": "The text contains the swear word 'блять'."
   }
   ```
 
