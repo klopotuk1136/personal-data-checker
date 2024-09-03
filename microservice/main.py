@@ -19,6 +19,11 @@ TMP_PATH = os.path.join(BASE_PATH, 'temp')
 if not os.path.exists(TMP_PATH):
     os.mkdir(TMP_PATH)
 
+BIG_MODEL_NAME = "gpt-4o-2024-08-06"
+LIGHT_MODEL_NAME = "gpt-4o-mini"
+
+LARGE_FILE_LENGTH_LIMIT = 4000
+
 app = FastAPI()
 
 
@@ -49,7 +54,11 @@ async def upload_file(file: FileUpload):
         text_contents = process_file(temp_file_name)
         os.remove(temp_file_name)
 
-        response = check_text(text_contents)
+        if len(text_contents) < LARGE_FILE_LENGTH_LIMIT:
+            model_mame = BIG_MODEL_NAME
+        else:
+            model_mame = LIGHT_MODEL_NAME
+        response = check_text(text_contents, model_mame)
         return response
 
     except Exception as e:

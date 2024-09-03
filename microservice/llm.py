@@ -17,18 +17,18 @@ class PersonalDataSharedCompliance(BaseModel):
 
 prompt = """
 Your purpose is to detect personal data sharing or inappropriate content in texts.
-You will be given a text that can contain some sensitive data like name and surname, email, phone number, links to some social networks or messaging apps. You need to check if this data is shared in the text.
+You will be given a text that can contain some sensitive data like name and surname, email, phone number, links to some social networks or messaging apps etc. You need to check if this data is shared in the text.
+Pay attention that the text can contain some names or surnames that are not personal information (for example it can be an article about some scientist and their name is mentioned). You need to decide it from the context of the message.
 Also you need to report if there are any swear words or offensive communication present.
-Your responce needs to be a valid json object.
-Pay attention that the text can contain some names or surnames that are not personal information (for example it can be an article about some scientist and their name is mentioned). You need to decide it from the context of the message
+Your responce needs to be a valid json object. Explanation provided as a response should be in russian.
 """
 
 thread = client.beta.threads.create()
 
-def check_text(text):
+def check_text(text, model):
 
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o-2024-08-06",
+        model=model,
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": text}
