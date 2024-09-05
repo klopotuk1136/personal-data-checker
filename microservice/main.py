@@ -29,6 +29,7 @@ app = FastAPI()
 
 class FileUpload(BaseModel):
     username: str
+    filename: str
     doc_type: str
     data: str  # base64 encoded content
 
@@ -51,7 +52,7 @@ async def upload_file(file: FileUpload):
             temp_file_name = temp_file.name
             print(f'Temporary file created: {temp_file_name}')
         
-        text_contents = process_file(temp_file_name)
+        text_contents = f"File name: {file.filename}\n" + process_file(temp_file_name)
         os.remove(temp_file_name)
 
         if len(text_contents) < LARGE_FILE_LENGTH_LIMIT:
