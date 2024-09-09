@@ -50,7 +50,7 @@ async def upload_file(file: FileUpload):
         with tempfile.NamedTemporaryFile(dir=TMP_PATH, suffix=file_extension, delete=False) as temp_file:
             temp_file.write(decoded_data)
             temp_file_name = temp_file.name
-            print(f'Temporary file created: {temp_file_name}')
+            logger.info(f'Temporary file created: {temp_file_name}')
         
         text_contents = f"File name: {file.filename}\n" + process_file(temp_file_name)
         os.remove(temp_file_name)
