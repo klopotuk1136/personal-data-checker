@@ -15,6 +15,7 @@ This microservice is designed to check if any personal data has been shared in a
 - **Description:** This endpoint checks the contents of an uploaded file for personal data.
 - **Request Body:**
   - `username` (string): The username of the user.
+  - `filename` (string): The name of the file. Used to check if any data is shared in the name.
   - `doc_type` (string): The type of the file. Supported file types: pdf, docx, xlsx, txt.
   - `data` (string): The content of the file, encoded in base64.
 - **Response:**
@@ -24,6 +25,7 @@ This microservice is designed to check if any personal data has been shared in a
   ```json
   {
     "username": "klopotuk",
+    "filename": "Dyploma Alex Shevtsov",
     "doc_type": "docx",
     "data": "base64"
   }
@@ -32,7 +34,7 @@ This microservice is designed to check if any personal data has been shared in a
   ```json
   {
     "status": "sensitive_information",
-    "explanation": "The text contains the full name 'Pavel Klapatsiuk', which is considered personal data."
+    "explanation": "The text contains the full name 'Alex Shevtsov', which is considered personal data."
   }
   ```
 
