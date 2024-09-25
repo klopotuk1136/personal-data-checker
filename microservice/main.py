@@ -74,7 +74,7 @@ async def receive_message(text: TextMessage):
     try:
         text_contents = text.message
 
-        response = check_text(text_contents)
+        response = check_text(text_contents, BIG_MODEL_NAME)
         return response
 
     except Exception as e:
