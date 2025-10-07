@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   microservice:
-    build: .
+    image: personal-data-checker:latest
+    restart: always
     ports:
       - "8001:8001"
     volumes:
