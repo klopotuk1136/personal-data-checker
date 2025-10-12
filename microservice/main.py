@@ -19,8 +19,8 @@ TMP_PATH = os.path.join(BASE_PATH, 'temp')
 if not os.path.exists(TMP_PATH):
     os.mkdir(TMP_PATH)
 
-BIG_MODEL_NAME = "gpt-4o-2024-08-06"
-LIGHT_MODEL_NAME = "gpt-4o-mini"
+BIG_MODEL_NAME = "gpt-5-mini-2025-08-07"
+LIGHT_MODEL_NAME = "gpt-5-nano-2025-08-07"
 
 LARGE_FILE_LENGTH_LIMIT = 4000
 
