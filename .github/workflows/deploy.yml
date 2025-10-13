@@ -18,7 +18,7 @@ jobs:
           port: ${{ secrets.SSH_PORT || 22 }}
           script: |
             cd /usr/src/personal-data-checker
-            git pull
+            git pull -f
 
       - name: Build image
         uses: appleboy/ssh-action@v1
