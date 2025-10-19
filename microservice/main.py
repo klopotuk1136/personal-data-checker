@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 import os
 import logging
 import base64
@@ -8,7 +9,7 @@ import time
 import json
 
 from file_check import process_file
-from llm import check_text
+from llm import check_text, send_request_to_llm
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.getLogger("httpcore").setLevel(logging.INFO)
@@ -81,6 +82,23 @@ async def receive_message(text: TextMessage):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+class CustomRequsest(BaseModel):
+    text: str
+    prompt: str
+    model: Optional[str] = None
+
+@app.post("/do_request")
+async def do_request(request: CustomRequsest):
+    request_model = request.model
+    if request_model is None:
+        request_model = BIG_MODEL_NAME
+
+    try:
+        response = send_request_to_llm(request.text, request.prompt, request_model)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn

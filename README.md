@@ -6,6 +6,7 @@ This microservice is designed to check if any personal data has been shared in a
 
 1. `/check_file`: Accepts a file (in base64 format) and checks its contents for personal data. Supported file types: pdf, docx, xlsx, txt.
 2. `/check_message`: Accepts a text message and checks it for personal data.
+3. `/do_request`: Accepts a user input, system prompt and optional model name. Returns the response from llm.
 
 ## Endpoints
 
@@ -62,6 +63,35 @@ This microservice is designed to check if any personal data has been shared in a
     "explanation": "The text contains the swear word 'блять'."
   }
   ```
+
+### 3. `/do_request`
+
+- **Method:** `POST`  
+- **Description:**  
+  This endpoint sends a request to the language model with the provided text and prompt.  
+  The optional `model` parameter specifies which LLM to use; if omitted, the backend will handle it automatically.  
+
+- **Request Body:**  
+  - `text` (string): The main input text to be processed by the model.  
+  - `prompt` (string): The instruction or question guiding how the model should respond.  
+  - `model` (string, optional): The name or ID of the model to use. If omitted, a default model is chosen automatically.  
+
+- **Response:**  
+  The response structure depends on the underlying model’s output, typically containing the model’s generated text or analysis result.  
+
+- **Example Request:**  
+  ```json
+  {
+    "text": "Once upon a time in a small village...",
+    "prompt": "Continue this story in a humorous tone.",
+    "model": "gpt-5"
+  }
+
+- **Example Response:**  
+  ```json
+  {
+    "response": "Once upon a time in a small village, the baker accidentally baked his hat instead of bread, and the villagers declared it the best loaf ever made."
+  }
 
 ## Running the Application
 Before the start add a .env file with an environment variable `OPENAI_API_KEY`.
