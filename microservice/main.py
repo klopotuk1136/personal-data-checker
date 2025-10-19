@@ -5,6 +5,7 @@ import logging
 import base64
 import tempfile
 import time
+import json
 
 from file_check import process_file
 from llm import check_text
@@ -75,7 +76,7 @@ async def receive_message(text: TextMessage):
         text_contents = text.message
 
         response = check_text(text_contents, BIG_MODEL_NAME)
-        return response
+        return json.loads(response)
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
