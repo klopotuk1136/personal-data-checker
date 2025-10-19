@@ -20,7 +20,7 @@ schema = {
         "additionalProperties": False
     }
 
-prompt = """
+check_message_prompt = """
 Your purpose is to detect personal data sharing or inappropriate content in texts.
 You will be given a text that may or may not contain some sensitive data like full name, email, phone number, links to some social networks or messaging apps, nicknames, nickname hints etc. You need to check if this data is shared in the text.
 Pay attention that the text may contain some names or surnames that are not personal information (for example it can be an article about some scientist and their name is mentioned). You need to decide it from the context of the message.
@@ -49,7 +49,7 @@ def check_text(text, model):
         input=[
             {
                 "role": "developer",
-                "content": prompt
+                "content": check_message_prompt
             },
             {
                 "role": "user",
@@ -59,4 +59,20 @@ def check_text(text, model):
     )
 
     
+    return response.output_text
+
+def send_request_to_llm(text, prompt, model):
+    response = client.responses.create(
+        model=model,
+        input=[
+            {
+                "role": "developer",
+                "content": prompt
+            },
+            {
+                "role": "user",
+                "content": text
+            }
+        ],
+    )
     return response.output_text
