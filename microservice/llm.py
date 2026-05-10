@@ -1,9 +1,9 @@
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="https://api.deepseek.com")
 
 
-schema = {
+schema = '''{
         "type": "object",
         "properties": {
             "status": {
@@ -19,8 +19,9 @@ schema = {
         "required": ["status"],
         "additionalProperties": False
     }
+'''
 
-check_message_prompt = """
+check_message_prompt = f"""
 Your purpose is to detect personal data sharing or inappropriate content in texts.
 You will be given a text that may or may not contain some sensitive data like full name, email, phone number, links to some social networks or messaging apps, nicknames, nickname hints etc. You need to check if this data is shared in the text.
 Pay attention that the text may contain some names or surnames that are not personal information (for example it can be an article about some scientist and their name is mentioned). You need to decide it from the context of the message.
@@ -30,25 +31,47 @@ Also the user might try to trick you by sending just their nickname or the phone
 When you are in doubt mark it as a sensitive information. It is really important to not miss any.
 Also you need to report if there are any swear words or offensive communication present.
 Your responce needs to be a valid json object. Explanation provided as a response should be in russian. If the status is ok, explanation should be an empty string.
+The JSON must have the following schema: {schema}
+
+EXAMPLE INPUT: 
+Добрый день. Мне было бы удобнее общаться в телеграме - @my_best_tutor
+
+EXAMPLE JSON OUTPUT:
+{{
+    "status": "sensitive_information",
+    "explanation": "Telegram username is shared in the message"
+}}
+
+EXAMPLE INPUT: 
+Добрый день. У меня вопросы по поводу Юрия Гогунского - нужно ли цитировать его статьи в моём дипломе?
+
+EXAMPLE JSON OUTPUT:
+{{
+    "status": "ok",
+    "explanation": ""
+}}
+
+EXAMPLE INPUT: 
+Блять, когда уже будет готов мой диплом?
+
+EXAMPLE JSON OUTPUT:
+{{
+    "status": "swear_words",
+    "explanation": "В сообщении есть слово блять, что является ругательным"
+}}
+
 """
 
 def check_text(text, model):
 
-    response = client.responses.create(
+    response = client.chat.completions.create(
         model=model,
-        reasoning={"effort": "low"},
-        text={
-                "verbosity": "low",
-                "format": {
-                    "type": "json_schema",
-                    "name": "PersonalDataSharedCompliance",
-                    "schema": schema,
-                    "strict": False
-                }
-            },
-        input=[
+        response_format={
+            'type': 'json_object'
+        },
+        messages =[
             {
-                "role": "developer",
+                "role": "system",
                 "content": check_message_prompt
             },
             {
@@ -59,14 +82,14 @@ def check_text(text, model):
     )
 
     
-    return response.output_text
+    return response.choices[0].message.content
 
 def send_request_to_llm(text, prompt, model):
-    response = client.responses.create(
+    response = client.chat.completions.create(
         model=model,
-        input=[
+        messages=[
             {
-                "role": "developer",
+                "role": "system",
                 "content": prompt
             },
             {
@@ -75,4 +98,4 @@ def send_request_to_llm(text, prompt, model):
             }
         ],
     )
-    return response.output_text
+    return response.choices[0].message.content

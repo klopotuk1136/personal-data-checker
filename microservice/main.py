@@ -21,8 +21,8 @@ TMP_PATH = os.path.join(BASE_PATH, 'temp')
 if not os.path.exists(TMP_PATH):
     os.mkdir(TMP_PATH)
 
-BIG_MODEL_NAME = "gpt-5-mini-2025-08-07"
-LIGHT_MODEL_NAME = "gpt-5-nano-2025-08-07"
+BIG_MODEL_NAME = "deepseek-v4-pro"
+LIGHT_MODEL_NAME = "deepseek-v4-flash"
 
 LARGE_FILE_LENGTH_LIMIT = 4000
 
